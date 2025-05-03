@@ -47,7 +47,7 @@ training_args = TrainingArguments(
     save_steps=50,
     save_total_limit=1,
     #evaluation_strategy="no",
-    fp16=False,  # Only for GPU, so keep it False
+    fp16=False,  
     push_to_hub=False,
 )
 
