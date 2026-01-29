@@ -9,19 +9,15 @@ Original file is located at
 
 #Install dependencies
 # transformers --> to load and fine-tune pre-trained transformer models
-# datasets --> to get a dataset to do specific tasks
 # accelerate --> To make training faster and more efficient across different hardware setups
 !pip install transformers datasets accelerate
-
 from datasets import load_dataset #import the dataset
+from transformers import Trainer,DataCollatorForLanguageModeling,AutoTokenizer, AutoModelForCausalLM
+from transformers import TrainingArguments, Trainer
 
 dataset = load_dataset("ag_news" , split = "train[:5%]") # Loads the ag_news data and we want only 5% of data
 
 dataset = dataset.map(lambda x : {"text" : x["text"]} ,  remove_columns=dataset.column_names) # This code takes only text column from ag_news dataset
-
-# AutoTokenizer --> It will install the Tokenizer function which are going to help model
-# AutoModelForCausalLM --> predicts the next word in a sequence, based on previous words
-from transformers import AutoTokenizer, AutoModelForCausalLM
 
 model_name = "GPT2" # Load the GPT model
 
@@ -36,8 +32,6 @@ def tokenize_function(example):
 
 tokenized_dataset = dataset.map(tokenize_function, batched = True) # This whole code takes a batch of examples from dataset for tokenzation.
 
-from transformers import TrainingArguments, Trainer
-
 # Set Training Arguments
 training_args = TrainingArguments(
     output_dir="./gpt2-finetuned-yelp",
@@ -50,8 +44,6 @@ training_args = TrainingArguments(
     fp16=False,  
     push_to_hub=False,
 )
-
-from transformers import Trainer,DataCollatorForLanguageModeling
 
 data_collector = DataCollatorForLanguageModeling(tokenizer = tokenizer, mlm = False)
 
